@@ -4,12 +4,72 @@
 
 @section("script")
     <script src="https://sdk.accountkit.com/en_US/sdk.js"></script>
-    <script src="{{ URL::to('js/login.js') }}"></script>    
+    <script>
+    AccountKit_OnInteractive = function(){
+        AccountKit.init(
+        {
+            appId:"308652742954659", 
+            state: $("#token").val(), 
+            version:"v1.1",
+            debug: true
+        }
+        
+        );
+        console.log($("#token").val());
+    }
+
+    function loginCallback(response) 
+    {
+        console.log(response);
+        if (response.status === "PARTIALLY_AUTHENTICATED") {
+            var code = response.code;
+            var csrf = response.state;
+            
+            // Send code to server to exchange for access token
+        }
+        else if (response.status === "NOT_AUTHENTICATED") {
+            $('#myModal').modal('show');
+        }
+        else if (response.status === "BAD_PARAMS") {
+            $('#myModal').modal('show');
+        }
+    }
+
+
+
+    function emailLogin()
+    {
+        var val = $("#email").val();
+        if(isEmail(val))
+        {
+            console.log("calling email");
+            AccountKit.login(
+            'EMAIL',
+            {emailAddress: val},
+            loginCallback
+            );
+        }
+        else
+        {
+            $('#myModal').modal('show');
+        }
+    }
+
+    function isEmail(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    }
+
+
+    </script>
+    
+   
+
 @endsection
 
 @section("style")
 
-    <link rel="stylesheet" href="{{ URL::to('css/login.css') }}" >
+    <link rel="stylesheet" href="{{ URL::to('css/login.css') }}" />
       
 @endsection
 
@@ -27,6 +87,7 @@
     <div class="tab-content">
         <div id="email_log" class="tab-pane fade in active">
             <form>
+                <input type='hidden' name='code' id='code'  />
                 <div class="form-group col-md-12">
                     <label for="email">Email address</label>
                     <input type="email" name='email' class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
