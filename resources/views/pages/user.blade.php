@@ -16,17 +16,26 @@
 <div class='container'>
     
     <canvas id="world"></canvas>
-    <h3>USER ID</h1>
-    <p>{{ $userId }}</p>
+    @if(isset($name) && $name !== '')
+        
+        <h3>Name</h1>
+        <p>{{ $name }}</p>
 
-    @if($phone !== '')
+    @endif
+    
+    @if(isset($userId) &&  $userId !== '')
+        <h3>USER ID</h1>
+        <p>{{ $userId }}</p>
+    @endif
+
+    @if(isset($phone) && $phone !== '')
 
         <h3>Phone Number</h1>
         <p>{{ $phone }}</p>
 
     @endif
 
-    @if($email !== '')
+    @if(isset($email) && $email !== '')
 
         <h3>Email</h1>
         <p>{{ $email }}</p>

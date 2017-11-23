@@ -2,3 +2,16 @@
 {
     margin-top: 20px;
 }
+
+h2.option {
+    width: 100%; 
+    text-align: center; 
+    border-bottom: 1px solid #000; 
+    line-height: 0.1em;
+    margin: 60px 0px 20px; 
+ } 
+ 
+ h2.option span { 
+     background:#fff; 
+     padding:0 10px; 
+ }

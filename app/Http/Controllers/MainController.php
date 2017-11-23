@@ -60,16 +60,23 @@ class MainController extends Controller
      */
     public function login(Request $request)
     {
-        $url = $this->tokenExchangeUrl.'grant_type=authorization_code'.
-                '&code='. $request->get('code').
-                "&access_token=AA|$this->appId|$this->appSecret";
+        if(strlen($request->get('code')) != 0)
+        {
+            
+            $url = $this->tokenExchangeUrl.'grant_type=authorization_code'.
+                    '&code='. $request->get('code').
+                    "&access_token=AA|$this->appId|$this->appSecret";
 
-        //var_dump($url);
-        $apiRequest = $this->client->request('GET', $url);
-        $body = json_decode($apiRequest->getBody());
-        $this->userAccessToken = $body->access_token;
-        $this->refreshInterval = $body->token_refresh_interval_sec;
-        return $this->getData();
+            //var_dump($url);
+            $apiRequest = $this->client->request('GET', $url);
+            $body = json_decode($apiRequest->getBody());
+            $this->userAccessToken = $body->access_token;
+            $this->refreshInterval = $body->token_refresh_interval_sec;
+            return $this->getData();
+        }
+        else{
+            return view('pages.user', ['name' => $request->get('name')]);
+        }
     }
     public function getData()
     {

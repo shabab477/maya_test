@@ -4,6 +4,44 @@
 
 @section("script")
     <script src="https://sdk.accountkit.com/en_US/sdk.js"></script>
+
+    
+<script>
+    window.fbAsyncInit = function() {
+        FB.init({
+        appId      : '308652742954659',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v2.8'
+        });
+        
+        FB.AppEvents.logPageView();   
+        
+    };
+
+    function checkLoginState() {
+        FB.getLoginStatus(function(response) {
+            statusChangeCallback(response);
+        });
+    }
+
+    function statusChangeCallback(response)
+    {
+        FB.api('/me', function(response) {
+            $("#name").val(response.name);
+            $("#user").submit();
+        });
+    }  
+
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
+
     <script>
     //doc says to put these code in the same file. 
     //Linked scripts doesn't work for some reason
@@ -115,8 +153,9 @@
 <div class="container">
 
 <form id='user' method='POST' action='/user'>
+    <input type='hidden' name='name' id='name'  />
     <input type='hidden' name='code' id='code'  />
-    <input type="hidden" name='_token' id='_token' />
+    <input type="hidden" name='_token' id='_token'  value="{{ csrf_token() }}" />
 </form>
 
 <h2>Login</h2>
@@ -165,6 +204,16 @@
         </div>
 
     </div>
+
+    <h2 class='option'><span>OR JUST LOGIN WITH FACEBOOK</span></h2>
+    <div class='row'>
+        <div class='center-block col-md-2'>
+            <fb:login-button  size="medium" scope="public_profile,email" onlogin="checkLoginState();">
+                Login Using your Facebook Profile
+            </fb:login-button>
+        </div>
+    </div>
+    <div id="status">
 </div>
 
 <div class="modal fade" id="myModal" role="dialog">
