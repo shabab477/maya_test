@@ -27,8 +27,7 @@
         if (response.status === "PARTIALLY_AUTHENTICATED") {
             var code = response.code;
             var csrf = response.state;
-            var code = response.code;
-            var csrf = response.state;
+            
             $("#code").val(code);
             $("#_token").val(csrf);
             $("#user").submit();
@@ -62,10 +61,33 @@
         }
     }
 
+    function phoneLogin()
+    {
+        var val = $("#phone").val();
+        if(isPhone(val))
+        {
+            console.log("calling phone");
+            AccountKit.login(
+                'PHONE', 
+                {
+                    countryCode: "+880", 
+                    phoneNumber: val
+                    
+                },
+                loginCallback
+            );
+        }
+        else
+        {
+            $('#myModal').modal('show');
+        }
+    }
+
 
     function isPhone(phone)
     {
-        var re = /^\d{10}$/
+        var re = /^\d{10}$/;
+        return re.test(phone);
     }
 
     function isEmail(email) {
