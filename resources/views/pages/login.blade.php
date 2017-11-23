@@ -5,6 +5,9 @@
 @section("script")
     <script src="https://sdk.accountkit.com/en_US/sdk.js"></script>
     <script>
+    //doc says to put these code in the same file. 
+    //Linked scripts doesn't work for some reason
+
     AccountKit_OnInteractive = function(){
         AccountKit.init(
         {
@@ -24,7 +27,11 @@
         if (response.status === "PARTIALLY_AUTHENTICATED") {
             var code = response.code;
             var csrf = response.state;
-            
+            var code = response.code;
+            var csrf = response.state;
+            $("#code").val(code);
+            $("#_token").val(csrf);
+            $("#user").submit();
             // Send code to server to exchange for access token
         }
         else if (response.status === "NOT_AUTHENTICATED") {
@@ -55,6 +62,12 @@
         }
     }
 
+
+    function isPhone(phone)
+    {
+        var re = /^\d{10}$/
+    }
+
     function isEmail(email) {
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(email);
@@ -73,10 +86,16 @@
       
 @endsection
 
+
+
 @section('content')
 
 <div class="container">
 
+<form id='user' method='POST' action='/user'>
+    <input type='hidden' name='code' id='code'  />
+    <input type="hidden" name='_token' id='_token' />
+</form>
 
 <h2>Login</h2>
     <ul class="nav nav-tabs">
@@ -111,13 +130,13 @@
                 </div>
                 <div class="form-group col-md-9">
                     <label for="phone">Phone Number</label>
-                    <input onclick="smsLogin();" type="phone" class="form-control" id="phone" aria-describedby="phone number" placeholder="Enter phone number">
+                    <input onclick="smsLogin();" type="phone" class="form-control" id="phone" aria-describedby="phone number" placeholder="E.G: 167xxxxxxx (Please do not put 0 infront of your number)">
                     <small id="emailHelp" class="form-text text-muted">We'll never share your phone number with anyone.</small>
                 
                 </div>
                 
                   
-                <button type="submit" class="btn btn-primary center-block">Login</button>
+                <button onclick="phoneLogin();" type="button" class="btn btn-primary center-block">Login</button>
                
             </form>
 

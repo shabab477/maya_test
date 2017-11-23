@@ -13,4 +13,6 @@
 
 Route::get('/', function () {
     return view('pages.login');
-});
+})->name('home');
+
+Route::post('/user', 'MainController@login');
